@@ -1,4 +1,52 @@
 1. Прописываем элементу: display: flex
 Теперь все элементы внутри становятся гибкими flexbox-ами
-Теперь направляем ось. По умолчанию: flex-dirextion: row (слева направо). Аналог - float: left
-lex-dirextion: row-reverse (справа налево). Аналог float:right
+Теперь направляем ось.  
+flex-dirextion: row (слева направо). Аналог - float: left  - По умолчанию:
+flex-dirextion: row-reverse (справа налево). Аналог float:right
+flex-direction: column  (Сверху вниз)
+flex-direction: column-reverse  (Снизу вверх)
+
+align-items: stretch (по умолчанию) Выравнивание детей по высоте.Прописывается у родителей. На всю ширину родителя. 
+Читы:
+ align-items: flex-start Выравнивание по верху
+ align-items: flex-end Выравнивание по низу
+ align-items: center Выравнивание по вертикали
+
+ align-self: те же значения. Выравнивание ребенка (себя)
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FLEX</title>
+</head>
+<body>
+	<div class="main">
+		<div class="item">1</div>
+		<div class="item">
+			<p>22222222222222222222222222222222222222</p>
+			
+		</div>
+		<div class="item">3</div>
+		<div class="item">4</div>
+		<div class="item">5</div>
+	</div>
+
+</body>
+</html>
+<style>
+	.main {
+		outline: 1px solid black;
+		height: 100px;
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+
+	}
+	.item {
+		
+		
+		outline: 1px solid black;
+		margin: 10px;
+	}
+</style>
