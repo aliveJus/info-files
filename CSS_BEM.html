@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>BEM</title>
+</head>
+<body>
+	<div class="products">
+		<div class="productItem">
+			<div class="product__img" src="img/img.jpeg"></div>
+			<div class="product__subtitle"> Милан Премиум</div>
+			<div class="product__price">15000</div> 
+			<div class="product__btn">в корзину</div>
+		</div>
+	</div>	
+
+	<div class="products">
+		<div class="productItem">
+			<div class="product__img" src="img/img.jpeg"></div>
+			<div class="product__subtitle"> Милан Премиум</div>
+			<div class="product__price product__price-sale" data-sale="13000">15000</div> <!-- добавлен модификатор (класс) распродажи -->
+			<div class="product__btn">в корзину</div>
+		</div>
+	</div>	
+
+</body>
+</html>
+
+<!-- Блок - можно независимо встраивать в любое место. Существует сам по себе. Блок внутри блока никогда не вкладывается!
+	Примеры: карточка товара
+		productItem
+	Модификатор у блока (например, для сайдбара)
+		productItem-aside
+
+
+	Элементы в блоке рекомендовано через 2 нижних подчеркивания с дублированием названия родительского блока
+		product__img
+		product__subtitle
+		product__price
+		product__btn
+
+	Можификатор
+
+		product__price-sale
+
+Пост процессоры - для преобразования, обработки, минификации. Собирают галпом
+
+==================================================               
+                   LESS
+==================================================
+
+	.productItem {
+		какой-то код
+	
+		&__img {         // амперсант во всех препроцессорах указывает на родителя
+			какой-то код
+		}
+
+		&__subtitle {         // 
+			какой-то код
+		}
+
+		&__price {         // 
+			какой-то код
+
+			&__-sale {         // модификатор вкладываем в элемент
+			какой-то код
+
+				&::after {   // равно product__price-sale::after
+					content: attr (data-sale)
+				}
+		    }
+		}
+
+	}
