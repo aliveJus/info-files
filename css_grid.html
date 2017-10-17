@@ -1,27 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Document</title>
+<meta charset="UTF-8">
+<title>Document</title>
 </head>
 <body>
-	
+
 </body>
 </html>
 
 <style>
-	div {
+div {
 		display: grid;
-		grid-template-columns: 100px 100px 100px; 
-		grid-template-rows: 100px 100px 100px;
-		grid-auto-rows: 100px;
-		grid-column-gap: 20px; 
-		grid-row-gap: 20px;
-		grid-gap: 20px;
+		grid-template-columns: 100px 100px 100px; /*задаем ширину каждого ряда*/
+		grid-template-rows: 100px 100px 100px; /*задаем высоту каждого ряда*/
+		grid-auto-rows: 100px; /*высота строк по умолчанию*/
+		grid-column-gap: 20px; /*расстояние между колонками*/
+		grid-row-gap: 20px; /*расстояние между рядами*/
+		grid-gap: 20px; /* обьединение 2ух верхних свойств*/
 
 		/* фракция */
 	grid-template-columns: 1fr 1fr 1fr /* 3 одинаковые,резиновые адаптивные колонки*/
-	grid-template-columns: 2fr 1fr 250px /* 1колонка - двойной размер, 2 колонка обычный размер, 3 колонка фиксированнный, не меняется при изминении */
+	grid-template-columns: 2fr 1fr 250px /* 1колонка резиновая- двойной размер, 2 колонка резиновая - обычный размер, 3 колонка фиксированнный, не меняется при изминении */
+
+	grid-template-columns: repeat( 3, 1fr); /*3 колонки по 1 фракции*/
+	
+	/*Чередование repeat*/
+	grid-template-columns: repeat( 2, 1fr 2fr); /* будут 4 КОЛОНКИ 1-2-1-2*/ 
+	grid-template-columns: 100px repeat( 2, 1fr 2fr); /* 5 колонок 100px 1-2-1-2 */
+	
+	/* minmax*/
+	grid-template-columns: minmax(150px, 250px) 1fr 1fr /* Ширина. Первый столбец резиновый, в заданных пределах  */ 
+
+	/* Высота рядов!*/
+	grid-auto-rows: minmax(100px, auto) /* Высота рядов. Минимальная 100px, максимальная по ширине контента. Под макс значение подстраивается весь ряд*/
+
+	/* Порядок элементов */
+	grid-auto-flow: column; /* СВЕРХУ ВНИЗ (выстраиваются в 1 ряд слева на право, если не задали grid-template-rows) */
+
+
+	                /* Responsive - адаптив */
+
+	/* auto-fill - оставляет пространство для новых элементов справа */
+ 	grid-template-columns: repeat(auto-fill, 200px); /* при достижении 200px происходит перенос */
+	grid-template-columns: repeat(auto-fill, minmax(50px, 100px));
+	grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+	
+	/* auto-fit - пространство не оставляет, занимает всю ширину строки */
+	grid-template-columns: repeat(auto-fit, minmax(50px, 100px));
 	}
 
+	/* Позиция элетента на линии */
+	.grid div:nth-child(1) {    /* Оставит пустое место где был 1-ый итем*/
+		grid-column-start: 2;}
+
+	/* Растянем первый элемент на всю ширину строки, а остальные спустим ниже */ 
+	.grid div:nth-child(1) {   
+		grid-column-start: 1; /* Позция элемента №1 */
+	    grid-column-end: -1;} /* Тянем на всю ширину строки */ 
+	
+	/* Или короткая запись  */
+	.grid div:nth-child(1) {  
+		grid-column: 1 / -1;}
+
+    /* Запись для нижних блоков */\
+	.grid div:nth-child(2) {  
+		grid-row: 2; /* Номер ряда */
+		grid-column: 1; /* Оставляем на первой позиции во втором ряду */
+		
+	}
+	.grid div:nth-child(3) {  
+		grid-row: 2; /* Номер ряда */
+		grid-column: 2 / 4; /* Начинается с начала второго ряда и заканчивается перед четвертым, т.е. занимает  2 столбца (2 и 3) */ 
+		
+	            /* Выравнивание. Такоеже как и у flex box */
+	justify-items: stretch; /* Выравнивание ширины. start, end, center*/ 
+
+				/* Выравнивание по вертикали */
+	align-items: stretch; /*  start, end, center*/ 
+
+				/* Выравнивание отдельного элемента */
+	align-self:stretch; /*  start, end, center*/ 
+	justify-self:stretch; /*  start, end, center*/ 
+}
+
+
+=================================================================
+		 		/* Управление отдельными областями */
+=================================================================
+.myBlock {
+	display: grid;
+	grif-template-areas:
+		"header"
+		"article"
+		"aside"
+		"footer";
+}
+@media (min-width: 640px) {
+	.myBlock {
+		grid-template-columns: 2fr 4fr;
+		grid-template-areas: 
+			"header header"
+			"aside article"
+			"footer footer"
+			"footer ."   
+			". footer"  /* Точка означает пустой блок*/
+			". footer"  /* Точка означает пустой блок*/
+			;
+	}
+}
+
+header {		
+	grid-area: header; /* Название придумываем сами */
+}
+article {		
+	grid-area: article; /* Название придумываем сами */
+}
+aside {		
+	grid-area: aside; /* Название придумываем сами */
+}
+footer {		
+	grid-area: footer; /* Название придумываем сами */
+}
 </style>
