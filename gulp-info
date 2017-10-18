@@ -21,6 +21,7 @@ MyProject
 		-fonts
 		-img
 		-js
+		-libs /*сторонние библиотеки, типа jQ*/
 		-sass
 		-index.html
 
@@ -183,3 +184,127 @@ gulp.task('watch',['browser-sync','sass'], function () {
 ===========================================================================
 
 В оптимизации нуждаются не пользовательские функции, а файлы библиотек, типа jQuery - нуждаются в сжатии
+
+
+----------------------------------------------
+Установка новых библиотек через Bower.io
+npm -g bower
+----------------------------------------------
+создаем в корне файл .bowerrc
+
+в этом файле указываем куда будем устанавливать библиотеки
+	{
+		"directory": "app/libs/"
+	}
+Для примера установим jQ
+	bower i jquery magnific-popup (установка 2х библиотек)
+
+----------------------------------------------------
+       Объединение и сжатие jQuery
+----------------------------------------------------
+
+npm i gulp-concat gulp-uglifyjs --save-dev   // save-dev для сохранения версий пакетов
+
+/*подключаем эти библиотеки*/
+
+	concat = require('gulp-concat'),
+	uglify = require('gulp-uglifyjs')
+
+/*псоздаем Таск для сборки и сжатия всех скриптов*/
+Нам нужен массив
+	gulp.task('scripts', function () {
+		return gulp.src([
+			'app/libs/jquery/dist/jquery.min.js', // рекомендуют именно min
+			'app/libs/magnific-popup/dist/magnific-popup.min.js'
+		])
+		.pipe(concat('libs.min.js'))
+		.pipe(uglify())
+		.pipe(gulp.dest('app/js')) // это папка выгрузки
+	})	
+	========================================================
+		Подключение скриптов/библиотек 
+	========================================================
+
+	Сначала подключаются libs потом кастомные common
+	<script src = "js/libs.min.js"></script>
+	<script src = "js/common.js"></script>
+
+
+
+	=========================================================
+		           сжатие css файлов и их переименование
+		           npm i gulp-cssnano gulp-rename --save-dev
+ 	=========================================================
+
+ 	Подключаем в наш gulpfile
+
+ 	cssnano = require('gulp-cssnano'),
+ 	rename = require('gulp-rename')
+
+ 	/*Подключаем минификацию всех css файлов*/
+ 		gulp.task('css-libs',['sass'], function () {  /*'css-libs' - мы так назвали*/ /* дописали sass, т.к. убрали из watch*/
+ 			return gulp.src('app/css/libs.css')
+ 			.pipe(cssnano()) //сжимаем
+ 			.pipe(rename({suffix: '.min'})) // добавляем к имени суффикс .min
+ 			.pipe(gulp.dest('app/css'))   // выгружаем все это в app/css
+ 		})
+
+/* прописываем стили в html
+<link rel = "stylesheet" href = "css/libs.min.css"
+<link rel = "stylesheet" href = "css/main.css"
+ */
+
+/* в Watch дописываем css-libs */
+
+
+gulp.task('watch',['browser-sync','css-libs', 'scripts'], function () { //sass убрали и дописали его в libs  
+		gulp.watch('app/sass/**/*.sass', ['sass']);
+		gulp.watch('app/**/*.html', browserSync.reload); // 
+		gulp.watch('app/js/**/*.js', browserSync.reload); 
+	}
+
+
+
+
+====================================================
+	готовим к продакшн
+====================================================
+
+пишем новый task build
+
+	gulp.task('build', function () {
+		
+		var buildCss = gulp.src ([     // пишем, какие файлы будем переносить
+			'app/css/main.css'
+			'app/css/libs.min.css'
+		]);
+		.pipe(gulp.dest('dist/css'));		// пишем в какую папку выгрузить
+
+		var buildFonts = gulp.src ('app/fonts/**/*') // выбор всех файлов и папок
+		.pipe(gulp.dest('dist/fonts'));
+
+		var buildJs = gulp.src('app/js/**/*')
+		.pipe(gulp.dest('dist/js'));
+	
+		var  buildHtml = gulp.src('app/**/*.html')
+		.pipe(gulp.dest('dist'));
+	})
+
+
+
+
+	/* очищаем папку dist от потрахов*/
+		Устанавливаем пакет del
+		npm i del --save-dev
+подключаем в gupfile
+
+		del = require('del')
+/* Создаем новый таск до Watch */
+
+	gulp.task('clean', function () {
+		return del.sync('dist');    // удаление папки
+	})
+
+-----------------------------------------
+	модифицируем task build
+-----------------------------------------
